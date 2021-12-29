@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "vue-cli-plugin-browser-extension": "~0.25.2",
     "vue-template-compiler": "^2.6.11"
   },
   "browserslist": [
