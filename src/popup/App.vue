@@ -8,13 +8,29 @@
 			<br />
 			<button class="addButton">Ekle</button>
 		</form>
+
+		<ul>
+			<li>
+				<h2>
+					<a href="https://www.youtube.com/watch?v=kbU1KTCWLIc" target="_blank"
+						>Bla bla</a
+					>
+				</h2>
+				<!-- <link-prevue
+					url="https://www.youtube.com/watch?v=kbU1KTCWLIc"
+				></link-prevue> -->
+			</li>
+		</ul>
 	</div>
 </template>
 
 <script>
+import LinkPrevue from 'link-prevue';
 export default {
 	name: 'App',
-	components: {},
+	components: {
+		LinkPrevue,
+	},
 };
 </script>
 
@@ -23,8 +39,26 @@ html {
 	width: 500px;
 	height: 500px;
 
+	padding: 0;
+	margin: 0;
+
 	background-color: #323234;
 	color: #ededed;
+}
+* {
+	box-sizing: border-box;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+a:hover {
+	color: #4198d3;
+}
+
+li {
+	list-style-type: none;
 }
 
 .container {
@@ -44,7 +78,7 @@ html {
 .addButton {
 	padding: 10px 30px;
 
-	background-color: rgb(65, 152, 211);
+	background-color: #4198d3;
 	color: white;
 
 	border: none;
