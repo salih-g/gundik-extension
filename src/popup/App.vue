@@ -10,11 +10,10 @@
 		</form>
 
 		<ul>
-			<li>
+			<li v-for="(post, i) in posts" :key="i">
 				<h2>
-					<a href="https://www.youtube.com/watch?v=kbU1KTCWLIc" target="_blank"
-						>Bla bla</a
-					>
+					<a :href="post.url" target="_blank">{{ post.title }}</a>
+					<button class="deleteButton">X</button>
 				</h2>
 				<!-- <link-prevue
 					url="https://www.youtube.com/watch?v=kbU1KTCWLIc"
@@ -25,11 +24,34 @@
 </template>
 
 <script>
+import axios from 'axios';
 import LinkPrevue from 'link-prevue';
+
 export default {
 	name: 'App',
 	components: {
 		LinkPrevue,
+	},
+	data() {
+		return {
+			apiUrl: 'https://gundik.vercel.app/api/posts/',
+			posts: {},
+		};
+	},
+	methods: {
+		async getPosts() {
+			await axios
+				.get(this.apiUrl)
+				.then((r) => {
+					this.posts = r.data.posts;
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+		},
+	},
+	async created() {
+		await this.getPosts();
 	},
 };
 </script>
@@ -66,6 +88,9 @@ li {
 	margin: 0 auto;
 	text-align: center;
 }
+.title {
+	text-transform: capitalize;
+}
 .input {
 	width: 90%;
 	height: 10px;
@@ -79,14 +104,24 @@ li {
 	padding: 10px 30px;
 
 	background-color: #4198d3;
-	color: white;
+	color: #ededed;
 
 	border: none;
 	border-radius: 5px;
 
 	cursor: pointer;
 }
-.title {
-	text-transform: capitalize;
+
+.deleteButton {
+	margin-left: 10px;
+	padding: 5px;
+
+	font-size: 15px;
+	background-color: #ed74ad;
+	color: #ededed;
+
+	border: none;
+	border-radius: 2px;
+	cursor: pointer;
 }
 </style>
