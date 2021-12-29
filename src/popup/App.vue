@@ -1,10 +1,22 @@
 <template>
 	<div class="container">
-		<h3 class="title">İzleme Listesi</h3>
-		<form>
-			<input class="input" type="text" placeholder="Baslik" required />
+		<h3 class="title">{{ mainTitle }}</h3>
+		<form v-on:submit.prevent="createPost">
+			<input
+				class="input"
+				type="text"
+				placeholder="Başlık"
+				v-model="newPost.title"
+				required
+			/>
 			<br />
-			<input class="input" type="url" placeholder="Link" required />
+			<input
+				class="input"
+				type="url"
+				placeholder="Link"
+				v-model="newPost.url"
+				required
+			/>
 			<br />
 			<button class="addButton">Ekle</button>
 		</form>
@@ -13,7 +25,7 @@
 			<li v-for="(post, i) in posts" :key="i">
 				<h2>
 					<a :href="post.url" target="_blank">{{ post.title }}</a>
-					<button class="deleteButton">X</button>
+					<button class="deleteButton" @click="deletePost(post._id)">X</button>
 				</h2>
 				<!-- <link-prevue
 					url="https://www.youtube.com/watch?v=kbU1KTCWLIc"
@@ -34,8 +46,13 @@ export default {
 	},
 	data() {
 		return {
+			mainTitle: 'İzleme Listesi',
 			apiUrl: 'https://gundik.vercel.app/api/posts/',
 			posts: {},
+			newPost: {
+				title: '',
+				url: '',
+			},
 		};
 	},
 	methods: {
@@ -49,6 +66,19 @@ export default {
 					console.error(err);
 				});
 		},
+		async createPost() {
+			console.log('test');
+			await axios.post(this.apiUrl, this.newPost).then((r) => {
+				if (r.status == 200) {
+					this.getPosts();
+					this.mainTitle = 'İzleme Listesi';
+				} else {
+					this.mainTitle = 'Eklenemedi';
+				}
+			});
+		},
+
+		async deletePost(id) {},
 	},
 	async created() {
 		await this.getPosts();
