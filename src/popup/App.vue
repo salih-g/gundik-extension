@@ -1,6 +1,7 @@
 <template>
 	<div class="container">
-		<h3 class="title">{{ mainTitle }}</h3>
+		<h2 class="title">İzlenme listesi</h2>
+		<h3 v-if="errors.length !== 0" class="error">{{ errors }}</h3>
 		<form v-on:submit.prevent="createPost">
 			<input
 				class="input"
@@ -46,8 +47,8 @@ export default {
 	},
 	data() {
 		return {
-			mainTitle: 'İzleme Listesi',
 			apiUrl: 'https://gundik.vercel.app/api/posts/',
+			errors: '',
 			posts: {},
 			newPost: {
 				title: '',
@@ -60,25 +61,50 @@ export default {
 			await axios
 				.get(this.apiUrl)
 				.then((r) => {
-					this.posts = r.data.posts;
+					if (r.data.statusCode == 200) {
+						this.posts = r.data.posts;
+						this.errors = '';
+					} else {
+						this.errors = 'Liste getirilirken bir sorun ile karşılaşıldı';
+					}
 				})
 				.catch((err) => {
 					console.error(err);
 				});
 		},
 		async createPost() {
-			console.log('test');
-			await axios.post(this.apiUrl, this.newPost).then((r) => {
-				if (r.status == 200) {
-					this.getPosts();
-					this.mainTitle = 'İzleme Listesi';
-				} else {
-					this.mainTitle = 'Eklenemedi';
-				}
-			});
+			await axios
+				.post(this.apiUrl, this.newPost)
+				.then((r) => {
+					if (r.data.statusCode == 201) {
+						this.newPost.title = '';
+						this.newPost.url = '';
+						this.getPosts();
+						this.errors = 'Post eklendi';
+					} else {
+						this.errors = 'Eklenemedi';
+					}
+				})
+				.catch((err) => {
+					console.error(err);
+				});
 		},
 
-		async deletePost(id) {},
+		async deletePost(id) {
+			await axios
+				.delete(this.apiUrl + id)
+				.then((r) => {
+					if (r.data.statusCode == 202) {
+						this.getPosts();
+						this.errors = 'Post silindi';
+					} else {
+						this.errors = 'Post silinemedi';
+					}
+				})
+				.catch((err) => {
+					console.error(err);
+				});
+		},
 	},
 	async created() {
 		await this.getPosts();
